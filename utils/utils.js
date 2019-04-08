@@ -1,6 +1,5 @@
 function toSafeNumber(params, arr) {
-  // let newPrams = { ...params };
-  let newPrams = params;
+  let newPrams = { ...params };
 
   arr.forEach(item => {
     if (params[item]) {

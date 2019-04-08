@@ -1,6 +1,6 @@
 import todo from '../model/todo';
 import { successResponse } from '../utils/response';
-import { toSafeNumber } from '../utils/utils';
+// import { toSafeNumber } from '../utils/utils';
 
 async function add(ctx, next) {
   const { userId, content, completed } = ctx.request.body;
@@ -19,15 +19,20 @@ async function add(ctx, next) {
 }
 
 async function fetchList(ctx, next) {
-  const { userId, current = 0, pageSize = 10 } = toSafeNumber(ctx.query, ['current', 'pageSize']);
-  const total = await todo.find({ userId });
-  console.log(current, pageSize);
-  let res = await todo.find({ userId }).sort({ time: -1 }).skip((current) * pageSize).limit(pageSize);
+  // const { userId, current = 0, pageSize = 10 } = toSafeNumber(ctx.query, ['current', 'pageSize']);
+  // const userId = ctx.query.query;
+  const { query: userId } = ctx.request.body;
+  // const total = await todo.find({ userId });
+  // console.log(current, pageSize);
+  // let res = await todo.find({ userId }).sort({ time: -1 }).skip((current) * pageSize).limit(pageSize);
+  let res = await todo.find({ userId });
+
+  console.log(res);
   if (res instanceof Array && res.length >= 0) {
     ctx.body = successResponse({
-      current,
-      pageSize,
-      total: total.length,
+      // current,
+      // pageSize,
+      // total: total.length,
       message: "查询成功",
       content: res,
     });
