@@ -45,4 +45,21 @@ async function fetchList(ctx, next) {
   }
 }
 
-module.exports = { add, fetchList }
+async function update(ctx,next) {
+  const { content } = ctx.request.body;
+  const completed = { "completed": true};
+  const res = await Promise.all(
+    content.map(item=>{
+    return todo.updateMany({content:item}, completed)
+    })
+  )
+  if(res && res.length === content.length){
+    ctx.body = {
+      code:200,
+      message: "更新成功",
+    }
+  }
+  
+}
+
+module.exports = { add, fetchList, update }
