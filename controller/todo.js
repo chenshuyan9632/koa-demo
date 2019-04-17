@@ -8,13 +8,13 @@ async function add(ctx, next) {
   if (res.length !== 0) {
     ctx.body = {
       failed: false,
-      message: res
-    }
+      message: res,
+    };
   } else {
     ctx.body = {
       failed: true,
-      message: '新增失败'
-    }
+      message: '新增失败',
+    };
   }
 }
 
@@ -27,39 +27,38 @@ async function fetchList(ctx, next) {
   // let res = await todo.find({ userId }).sort({ time: -1 }).skip((current) * pageSize).limit(pageSize);
   let res = await todo.find({ userId });
 
-  console.log(res);
+  // console.log(res);
   if (res instanceof Array && res.length >= 0) {
     ctx.body = successResponse({
       // current,
       // pageSize,
       // total: total.length,
-      message: "查询成功",
+      message: '查询成功',
       content: res,
     });
   } else {
     ctx.body = {
       failed: false,
       message: '无list',
-      content: []
-    }
+      content: [],
+    };
   }
 }
 
-async function update(ctx,next) {
-  const { content } = ctx.request.body;
-  const completed = { "completed": true};
+async function update(ctx, next) {
+  const { content: body } = ctx.request.body;
   const res = await Promise.all(
-    content.map(item=>{
-    return todo.updateMany({content:item}, completed)
-    })
-  )
-  if(res && res.length === content.length){
+    body.map(item => {
+      const { content, completed } = item;
+      return todo.updateOne({ content }, { completed });
+    }),
+  );
+  if (res && res.length === body.length) {
     ctx.body = {
-      code:200,
-      message: "更新成功",
-    }
+      code: 200,
+      message: '更新成功',
+    };
   }
-  
 }
 
-module.exports = { add, fetchList, update }
+module.exports = { add, fetchList, update };
